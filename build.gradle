@@ -1,19 +1,142 @@
 plugins {
     id 'java'
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = 'com.foxapplication.mc'
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation("com.foxapplication.mc:interaction-base:1.2.0")
+    implementation 'org.smartboot.http:smart-http-server:1.3.8'
+    implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.3'
+
+    implementation 'com.esotericsoftware.kryo:kryo5:5.5.0'
 }
 
 test {
     useJUnitPlatform()
+}
+import java.nio.file.Files
+import java.nio.file.Paths
+
+tasks.register('mergeManifests') {
+    doFirst {
+        // 清空 external 目录
+        delete "$buildDir/external"
+    }
+    doLast {
+        def forgeManifest = "$buildDir/external/Forge/META-INF/MANIFEST.MF"
+        def fabricManifest = "$buildDir/external/Fabric/META-INF/MANIFEST.MF"
+        def paperManifest = "$buildDir/external/Paper/META-INF/MANIFEST.MF"
+        def commonManifest = "$buildDir/external/Common/META-INF/MANIFEST.MF"
+        def mergedManifest = "$buildDir/external/META-INF/MANIFEST.MF"
+
+        copy {
+            from(zipTree("interconnectionneoforge/build/libs/interconnectionneoforge-${version}.jar")) {
+                include 'META-INF/MANIFEST.MF'
+            }
+            into("$buildDir/external/Forge")
+        }
+
+        copy {
+            from(zipTree("interconnectionfabric/build/libs/interconnectionfabric-${version}.jar")) {
+                include 'META-INF/MANIFEST.MF'
+            }
+            into("$buildDir/external/Fabric")
+        }
+
+        copy {
+            from(zipTree("interconnectionpaper/build/libs/interconnectionpaper-${version}.jar")) {
+                include 'META-INF/MANIFEST.MF'
+            }
+            into("$buildDir/external/Paper")
+        }
+
+        copy {
+            from(zipTree("interconnectioncommon/build/libs/interconnectioncommon-${version}.jar")) {
+                include 'META-INF/MANIFEST.MF'
+            }
+            into("$buildDir/external/Common")
+        }
+
+        // 读取所有 MANIFEST.MF 文件的内容
+        def forgeLines = Files.readAllLines(Paths.get(forgeManifest))
+        def fabricLines = Files.readAllLines(Paths.get(fabricManifest))
+        def paperLines = Files.readAllLines(Paths.get(paperManifest))
+        def commonLines = Files.readAllLines(Paths.get(commonManifest))
+
+        // 合并多个 MANIFEST.MF 文件的内容，去掉重复行并在合适的地方换行
+        def manifestContent = new LinkedHashSet<>()
+        manifestContent.addAll(forgeLines)
+        manifestContent.addAll(fabricLines)
+        manifestContent.addAll(paperLines)
+        manifestContent.addAll(commonLines)
+
+        // 将合并后的内容写入新的 MANIFEST.MF 文件，并在文件末尾添加换行符
+        Files.createDirectories(Paths.get("$buildDir/external/META-INF"))
+        def manifestContentWithoutEmptyLines = manifestContent.findAll { it != "" }
+        Files.write(Paths.get(mergedManifest), (manifestContentWithoutEmptyLines.join("\n") + "\n").getBytes())
+
+        // 提取 Forge、Fabric、Paper 文件夹内除了 META-INF/MANIFEST.MF 之外的其他内容
+
+        copy {
+            from(zipTree("interconnectionneoforge/build/libs/interconnectionneoforge-${version}.jar")) {
+                exclude 'META-INF/MANIFEST.MF'
+            }
+            into("$buildDir/external")
+        }
+        copy {
+            from(zipTree("interconnectionfabric/build/libs/interconnectionfabric-${version}.jar")) {
+                exclude 'META-INF/MANIFEST.MF'
+            }
+            into("$buildDir/external")
+        }
+
+        copy {
+            from(zipTree("interconnectionpaper/build/libs/interconnectionpaper-${version}.jar")) {
+                exclude 'META-INF/MANIFEST.MF'
+            }
+            into("$buildDir/external")
+        }
+
+        copy {
+            from(zipTree("interconnectioncommon/build/libs/interconnectioncommon-${version}.jar")) {
+                exclude 'META-INF/MANIFEST.MF'
+            }
+            into("$buildDir/external")
+        }
+    }
+}
+shadowJar {
+    dependsOn(mergeManifests)
+    from("$buildDir/external")
+    exclude("Forge/**")
+    exclude("Fabric/**")
+    exclude("Common/**")
+    exclude("Paper/**")
+    manifest {
+        from("$buildDir/external/META-INF/MANIFEST.MF")
+    }
+    dependencies {
+        include(dependency('com.foxapplication.mc:interaction-base:1.2.0'))
+        include(dependency('org.smartboot.http:smart-http-server:1.3.8'))
+        include(dependency('org.smartboot.http:smart-http-common:1.3.8'))
+        include(dependency('org.smartboot.socket:aio-pro:1.5.41'))
+        include(dependency('org.smartboot.socket:aio-core:1.5.41'))
+        include(dependency('com.esotericsoftware.kryo:kryo5:5.5.0'))
+        include(dependency(group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.3'))
+        // 排除其他依赖
+        exclude(dependency('org.junit.jupiter:junit-jupiter-api'))
+        exclude(dependency('org.junit.jupiter:junit-jupiter-engine'))
+    }
+    archiveFileName.set("Interconnection-${version}-For-NeoForge-Fabric-Paper-Velocity-Waterfall-Minecraft1.20.4.jar")
 }

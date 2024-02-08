@@ -1,4 +1,4 @@
-package com.foxapplication.mc.interconnection.fabric.util;
+package com.foxapplication.mc.interconnection.paper.util;
 
 import com.foxapplication.embed.hutool.core.io.FastByteArrayOutputStream;
 import com.foxapplication.embed.hutool.log.Log;

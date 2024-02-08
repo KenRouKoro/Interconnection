@@ -1,0 +1,7 @@
+name: interconnectionpaper
+version: '${version}'
+main: com.foxapplication.mc.interconnection.paper.InterconnectionPaper
+api-version: 1.20
+load: STARTUP
+authors: [ KenRouKoro ]
+depend : [ foxcorepaper ]
