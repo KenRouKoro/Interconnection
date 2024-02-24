@@ -31,7 +31,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     implementation "com.foxapplication.mc:foxcore:1.0.1"
     implementation "com.foxapplication.mc:interaction-base:1.2.0"
-    implementation "com.foxapplication.mc:interconnectioncommon:1.0.0"
+    implementation "com.foxapplication.mc:interconnectioncommon:1.0.1"
 
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
@@ -82,19 +82,13 @@ jar {
     }
 }
 
-// configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version project.version
             from components.java
         }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
     }
 }

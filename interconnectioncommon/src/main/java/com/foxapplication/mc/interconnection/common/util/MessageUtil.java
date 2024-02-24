@@ -30,7 +30,7 @@ public class MessageUtil {
      * @param message 消息内容
      */
     public static void send(String target, String service, String message) {
-        BaseMessage baseMessage = new BaseMessage(target, service, message);
+        BaseMessage baseMessage = new BaseMessage(service, target, message);
         send(baseMessage);
     }
 
@@ -42,7 +42,7 @@ public class MessageUtil {
      * @param message 消息内容
      */
     public static void send(String target, String service, byte[] message) {
-        BaseMessage baseMessage = new BaseMessage(target, service, message);
+        BaseMessage baseMessage = new BaseMessage(service, target, message);
         send(baseMessage);
     }
 
@@ -93,7 +93,7 @@ public class MessageUtil {
      * @param message 消息内容
      */
     public static void sendObject(String target, String service, Object message) {
-        BaseMessage baseMessage = new BaseMessage(target, service, ObjectUtil.serialize(message));
+        BaseMessage baseMessage = new BaseMessage(service, target, ObjectUtil.serialize(message));
         send(baseMessage);
     }
 

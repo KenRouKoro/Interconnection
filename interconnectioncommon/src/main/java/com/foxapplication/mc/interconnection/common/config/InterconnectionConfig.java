@@ -21,6 +21,12 @@ public class InterconnectionConfig {
      */
     @FieldAnnotation(name = "服务端口", value = "本节点所使用的端口号，推荐改一下，不然容易打架。")
     int port = 18080;
+    /**
+     * 外部端口
+     * 其它节点连接本节点所访问的端口，用于在使用例如Nginx等代理的情况
+     */
+    @FieldAnnotation(name = "外部端口", value = "外部端口，其它节点连接本节点所访问的端口，用于在使用例如Nginx等代理的情况，默认请和服务端口保存一致")
+    int externalPort = 18000;
 
     /**
      * 节点地址

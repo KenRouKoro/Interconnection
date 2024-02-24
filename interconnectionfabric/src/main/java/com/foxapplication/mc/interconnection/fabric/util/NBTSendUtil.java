@@ -6,11 +6,9 @@ import com.foxapplication.embed.hutool.log.LogFactory;
 import com.foxapplication.mc.interconnection.common.util.MessageUtil;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -102,7 +100,15 @@ public class NBTSendUtil {
     public static Tag parseNBT(byte[] NBT) throws IOException {
         FastByteArrayInputStream in = new FastByteArrayInputStream(NBT);
         DataInputStream inStream = new DataInputStream(in);
-        return NbtIo.read(inStream);
+        Tag tag;
+        try {
+            tag = NbtIo.readAnyTag(inStream,NbtAccounter.unlimitedHeap());
+        }catch (ReportedNbtException e){
+            log.error(e);
+            log.error(e.getReport().getException());
+            return null;
+        }
+        return tag;
     }
 
     /**
@@ -119,6 +125,7 @@ public class NBTSendUtil {
             //实际上这里永远不可能触发，因为这是在内存中输出
             log.error(e);
         }
+
         return out.toByteArray();
     }
 

@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.foxapplication.mc'
-version = '1.0.0'
+version = '1.0.1'
 
 repositories {
     mavenCentral()
@@ -23,7 +23,7 @@ dependencies {
     paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
     implementation "com.foxapplication.mc:foxcore:1.0.1"
     implementation "com.foxapplication.mc:interaction-base:1.2.0"
-    implementation "com.foxapplication.mc:interconnectioncommon:1.0.0"
+    implementation "com.foxapplication.mc:interconnectioncommon:1.0.1"
 
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'

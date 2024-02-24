@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.foxapplication.mc'
-version = '1.0.0'
+version = '1.0.1'
 
 repositories {
     mavenCentral()
@@ -14,7 +14,7 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    implementation "com.foxapplication.mc:interaction-base:1.2.0"
+    implementation "com.foxapplication.mc:interaction-base:1.2.1"
     implementation 'com.foxapplication.mc:foxcore:1.0.1'
 
     compileOnly 'org.projectlombok:lombok:1.18.26'

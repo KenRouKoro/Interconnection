@@ -91,8 +91,8 @@ public class Interconnection {
      */
     public static void onServerStarted(){
         log.info("正在启动Interaction...");
-        mine = new Server(config.getId(), config.getHost(), false, config.getPort(),new CopyOnWriteArrayList<>());
-        BaseClient.init(mine);
+        mine = new Server(config.getId(), config.getHost(), false, config.getExternalPort(),new CopyOnWriteArrayList<>());
+        BaseClient.init(mine, config.getPort());
         if (FoxCore.getConfig().isEnabledWebConfig()){
             WebConfig.addConfig(BaseClient.getBeanFoxConfig());
             WebConfig.addConfig(beanFoxConfig);
