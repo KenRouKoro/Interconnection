@@ -1,3 +1,5 @@
+import org.gradle.api.credentials.HttpHeaderCredentials
+
 plugins {
     id 'fabric-loom' version '1.5-SNAPSHOT'
     id 'maven-publish'
@@ -17,6 +19,7 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
     mavenCentral()
+    maven {url "https://git.foxapplication.com/api/packages/koro/maven"}
     mavenLocal()
     maven { url "https://mirrors.cloud.tencent.com/nexus/repository/maven-public/" }
 }
@@ -90,5 +93,21 @@ publishing {
             version project.version
             from components.java
         }
+    }
+    repositories {
+        maven {
+            name = "Gitea"
+            url = uri("https://git.foxapplication.com/api/packages/koro/maven")
+
+            credentials(HttpHeaderCredentials) {
+                name = "Authorization"
+                value = "token "+System.getenv("GITEA_TOKEN")
+            }
+
+            authentication {
+                header(org.gradle.authentication.http.HttpHeaderAuthentication)
+            }
+        }
+        mavenLocal()
     }
 }

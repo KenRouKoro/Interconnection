@@ -8,6 +8,7 @@ version = '1.0.1'
 
 repositories {
     mavenCentral()
+    maven {url "https://git.foxapplication.com/api/packages/koro/maven"}
     mavenLocal()
 }
 
@@ -50,5 +51,21 @@ publishing {
             version project.version
             from components.java
         }
+    }
+    repositories {
+        maven {
+            name = "Gitea"
+            url = uri("https://git.foxapplication.com/api/packages/koro/maven")
+
+            credentials(HttpHeaderCredentials) {
+                name = "Authorization"
+                value = "token "+System.getenv("GITEA_TOKEN")
+            }
+
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+        mavenLocal()
     }
 }
