@@ -11,6 +11,18 @@ interconnection test <Value> #用于发送测试数据，会在所有已连接�
 interconnection list #用于列出所有已连接的节点
 interconnection update #用于更新本节点在其它节点的数据，没事别用这个，有自动更新的
 ```
+## 开发
+请加入以下Maven仓库：
+```groovy
+    maven {url "https://git.foxapplication.com/api/packages/koro/maven"}
+```
+并添加以下依赖：
+```groovy
+    implementation "com.foxapplication.mc:foxcore:1.0.1"
+    implementation "com.foxapplication.mc:interaction-base:1.2.1"
+    implementation "com.foxapplication.mc:interconnectioncommon:1.0.1"
+    implementation "com.foxapplication.mc:interconnection{对应加载器}:1.0.1"
+```
 ## 使用
 **推荐使用Web配置系统**，因为其能更有效的编辑你需要的配置，并具有更好的可视化界面与翻译。
 ### InteractionBaseConfig
